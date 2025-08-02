@@ -42,7 +42,7 @@ int	main(int argc,char **argv)
 		fill_stack_a(stack_a, argv,indexed_argv, argc);
 		free(indexed_argv);
 		radix_lsd(stack_a, stack_b, max_number_of_bits);
-		print_stack(stack_a);
+		//print_stack(stack_a);
 		free_stacks(stack_a, stack_b);
 		return (0);
 	}
@@ -182,28 +182,23 @@ void	initial_push(t_stack *stack_a,t_node *node)
 void	radix_lsd(t_stack *stack_a,t_stack *stack_b, int max_number_of_bits)
 {
 	int current_bit; //bit mais a direita
-	t_node *current_node;
 	int	bit_is_zero;
-	int	node_location; //location of the node in the stack, 0 = top.
+	int	stack_a_initial_size = stack_a -> size;
+	int	i;
 
 	current_bit = 0;
+	stack_a_initial_size = stack_a -> size;
 	while(current_bit < max_number_of_bits)
 	{
-		node_location = 0; //sempre que comeco a analizar dado bit comeco pelo top da stack(location = 0)
-		current_node = stack_a -> top;
-		while (current_node) //enqanto tenho um node diferente de NULL
+		i = 1;
+		while (i <= stack_a_initial_size) //enqanto tenho um node diferente de NULL
 		{
-			bit_is_zero = check_if_bit_is_0(current_node ->index, current_bit);
+			bit_is_zero = check_if_bit_is_0(stack_a -> top -> index , current_bit);
 			if(bit_is_zero)
-			{
-				if(node_location + 1 <= ((stack_a -> size / 2 ) + stack_a -> size % 2))
-					bubble_up_and_push_with_rotate(stack_a,stack_b,node_location);// depois de fazer isso nao altero a node_location pois vou ter um novo node no local do 0 que estava
-				else
-					bubble_up_and_push_with_reverse_rotate(stack_a,stack_b,node_location);// depois de fazer isso nao altero a node_location pois vou ter um novo node no local do 0 que estava
-			}
+				push(stack_a,stack_b,'b');
 			else
-				node_location++;
-			current_node = get_node_with_location(stack_a, node_location);
+				rotate(stack_a);
+			i++;
 		}
 		push_b_on_top_of_a(stack_b, stack_a);
 		current_bit ++;
